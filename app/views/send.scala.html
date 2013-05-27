@@ -7,18 +7,48 @@
 
 <script>
     $(document).ready(function(){
-	    $("#optional_box .input_title").click(function(){
-	    if($("#optional_form").is(":hidden"))
+        $("input[name='type']").change(function(){
+            if ($("input[name='type']:checked").val() == 'self'){
+                $("#surprise").hide();
+                $("#gift_reminder").hide();
+                if($("#address_form").is(":hidden"))
+                    $("#address_box .input_title").click();
+            } else if ($("input[name='type']:checked").val() == 'gift'){
+                $("#surprise").show();
+                $("#gift_reminder").show();
+                if(!$("#address_form").is(":hidden"))
+                    $("#address_box .input_title").click();
+            }
+        });
+
+	    $("#message_box .input_title").click(function(){
+	    if($("#message_form").is(":hidden"))
 	    {
-	    $("#optional_form").slideDown("fast");
-	    $("#optional_box .input_title span").html("^");
+	    $("#message_form").slideDown("fast");
+	    $("#message_box .input_title span").html("^");
 
 	    }
 	    else{
-	    $("#optional_form").slideUp("fast");
-	    $("#optional_box .input_title span").html("v");
+	    $("#message_form").slideUp("fast");
+	    $("#message_box .input_title span").html("v");
 	    }
 	    });
+
+        $("#address_box .input_title").click(function(){
+        if($("#address_form").is(":hidden"))
+        {
+
+        $("#address_form").slideDown("fast");
+        $("#address_box .input_title span").html("^");
+
+        }
+        else{
+            if($("#c1").is(":checked") == false && $('input:radio[name=type]')[1].checked){
+                $("#address_form").slideUp("fast");
+                $("#address_box .input_title span").html("v");
+            }
+        }
+        });
 	
 	    $("#hint").click(function(){
 	    if($("#hint_box").is(":hidden"))
@@ -52,6 +82,14 @@
 				return false;
 			}
 		});
+
+
+        $('input:radio[name=type]')[0].checked = true;
+        $("input[name='type']").change();
+        $('#c1').change(function () {
+            if($('input:radio[name=type]')[1].checked && $("#address_form").is(":hidden"))
+                $("#address_box .input_title").click()  ;
+        });
     });
 </script>
 
@@ -129,8 +167,14 @@
 
     <!--for yourself-->
     <div id="right_content">
+        <div class="input_title">
+            <input type="radio" name="type" id="option_self" value="self" checked>
+            <label for="option_self" class="input_title">A gift for yourself</label>
+            <input type="radio" name="type" id="option_gift" value="gift">
+            <label for="option_gift" class="input_title">A gift for friend</label>
+        </div>
         @*<form id="wrapForm" action="@routes.Orders.saveOrder(friend.id, item.id)" method="post">*@
-            @if(session.get("facebookId") == friend.facebookId){
+            @*if(session.get("facebookId") == friend.facebookId){
             <div id="for_yourself">
                 <div class="input_title">Recipient's name</div>
                 <input class="info" id="recipientName" name="recipientName" value="@friend.name" type="text" style="margin-bottom:20px;" placeholder="Recipient's name"/>
@@ -150,19 +194,32 @@
                 <input class="infoAddress" id="postalCode" name="postalCode" type="text" placeholder="Postal code" />
                 <div id="paypal" class="checkout">Checkout with <img src="@routes.Assets.at("images/paypal.png")"/></div>
             </div>
-            }else {
+            }else {    *@
             <!--for friend-->
             <div id="for_friend">
+                <div class="input_title">Sender's name</div>
+                <input class="info" id="senderName" name="senderName" value="" type="text" placeholder="Sender's name"/>
+
+                <div class="input_title">Sender's email</div>
+                <input class="info" id="senderEmail" name="senderEmail" value="" type="text" placeholder="Sender's email"/>
+
+
                 <div class="input_title">Recipient's name</div>
                 <input class="info" id="recipientName" name="recipientName" value="@friend.name" type="text" placeholder="Recipient's name"/>
-                <textarea class="info" id="message" name="message" maxlength="255" placeholder="Your message"></textarea>
+
+                <div id="message_box" class="optional_box">
+                    <div class="input_title">Want to add message? (Optional)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
+                    <div id="message_form" class="optional_form">
+                        <textarea class="info" id="message" name="message" maxlength="255" style="width:315px; height:100px;" placeholder="Your message"></textarea>
+                    </div>
+                </div>
 
                 <div class="input_title">Notify via email</div>
                 <input class="info" id="recipientEmail" name="recipientEmail" value="@friend.email" type="text" placeholder="Recipient's email"/>
 
-                <div id="optional_box">
+                <div id="address_box" class="optional_box">
                     <div class="input_title">Know the delivery address? (Optional)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
-                    <div id="optional_form">
+                    <div id="address_form" class="optional_form">
                         <input class="infoAddress" id="contactNumber" name="contactNumber" type="text" style="margin-bottom:20px;" placeholder="Phone number"/>
                         <textarea class="infoAddress" id="address" name="address" maxlength="255" onpaste="return false;" style="width:315px; height:100px;" placeholder="Address"></textarea>
                         <input class="infoAddress" id="city" name="city" type="text" placeholder="City" />
@@ -172,7 +229,7 @@
                         <input class="infoAddress" id="postalCode" name="postalCode" type="text" placeholder="Postal code" />
                     </div>
                 </div>
-                <div style="position:relative">
+                <div id="surprise" hidden="true" style="position:relative">
                     <input type="checkbox" id="c1" name="isSurprise" />
                     <label for="c1" class="input_title"><span></span>Make this gift a surprise</label><div id="hint">?</div>
                     <div id="hint_box">If the gift is made a surprise,the recipient will not be able to see and choose the gift.</div>
@@ -186,10 +243,10 @@
                     Give it
                 </div>
                 }
-                <div class="input_title" style="font-weight:normal">
+                <div id="gift_reminder" hidden="true" class="input_title" style="font-weight:normal">
                     Your friend has 28 days to pick up this gift. After that the money will be returned to your account.</div>
             </div>
-            }
+            @*}*@
         @*</form>*@
     </div>
 

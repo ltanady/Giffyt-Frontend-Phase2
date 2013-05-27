@@ -128,7 +128,7 @@ textarea
 	overflow:hidden;
 }
 
-#optional_box
+.optional_box
 {
 	width:355px;
 	margin:20px 0px;
@@ -139,12 +139,12 @@ textarea
 	border:1px solid #ddd;
 }
 
-#optional_box .input_title
+.optional_box .input_title
 {
 	cursor:pointer;
 }
 
-#optional_form
+.optional_form
 {
 	margin-top:20px;
 	margin-bottom:6px;
@@ -152,7 +152,7 @@ textarea
 }
 
 
-#optional_form input[type=text]
+.optional_form input[type=text]
 {
 	width:315px;
 	margin-bottom:8px;
