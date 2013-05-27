@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Giffyt</title>
+    <!-- Jquery -->
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/style.css")" type="text/css" media="screen"/>
+    <link rel="shortcut icon" type="image/png" href=@routes.Assets.at("images/favicon.png")>
+    <style>
+        img.displayed {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="centerImage">
+    <a href="@routes.Friends.eventsFriends()">
+        <img class="displayed" src='@routes.Assets.at("images/not-found.png")' alt="">
+    </a>
+</div>
+</body>
+</html>

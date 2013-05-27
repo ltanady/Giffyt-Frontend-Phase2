@@ -1,0 +1,41 @@
+@(gifts: List[Gift])
+@import util._
+
+@main("Giffyt - Gifts") {
+	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/gift_list.css")">
+
+	<div id="content">
+		<div id="received_content">
+	        <div id="content_header">My Gifts</div>
+	        
+	       	<div id="gift_list">	
+			
+			@if(gifts == null || gifts.size() == 0) {
+	        	<div class="gift_none">
+	                	You currently do not have any gift(s).<br/><br/>
+	                	Start asking your friends to give you a gift!    
+	            </div>
+			
+			}else {
+			        @for(gift <- gifts) {
+                        @if(gift.senderName != null) {
+			            @*<a href="@routes.Gifts.getGift(gift.temporaryToken)">*@
+				        	<div class="gift_row">
+				            	<div class="gift_left">
+				                	<div class="gift_image"><img src="@routes.Assets.at("images/icons/icon-gift-active.png")" style="margin-top:20px" /></div> 
+				                    <b>@gift.senderName</b> sent you a gift.</div>
+				                @*<div class="gift_right">
+                                    @GiffytDateFormatter.format(gift.orderDate, GiffytDateFormatter.FULL_ASIAN_DATE_FORMAT)
+                                </div>*@
+				            </div> 
+			            @*</a>*@
+			            }
+			        }
+			}
+
+	        </div>
+	    </div>
+	    <!--for friend-->
+	</div>
+
+}(true)(false)(null)("gift_list")

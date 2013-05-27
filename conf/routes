@@ -1,0 +1,40 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                           controllers.Application.index()
+
+POST    /login                                      controllers.Application.login()
+
+GET     /logout                                     controllers.Application.logout()
+
+GET     /friends                                    controllers.Friends.eventsFriends()
+
+GET     /friends/:friendId                          controllers.Friends.celebrateFriend(friendId: String)
+
+GET     /friends/:friendId/give/:itemId             controllers.Friends.wrapGift(friendId: String, itemId: Long)
+
+POST    /products/list                              controllers.Products.list(countryCode: String, budget: Double ?= -1.0)
+
+POST    /gifts/count                                controllers.Gifts.count()
+
+GET     /gifts/list                                 controllers.Gifts.list()
+
+GET     /gifts/:temporaryToken                      controllers.Gifts.get(temporaryToken: String)
+
+GET     /gifts/:temporaryToken/open                 controllers.Gifts.open(temporaryToken: String)
+
+# Static Pages
+#===================
+GET     /tos                                        controllers.Application.tos()
+
+GET     /privacy                                    controllers.Application.privacy()
+
+GET     /faq                                        controllers.Application.faq()
+
+GET     /contact                                    controllers.Application.contactUs()
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

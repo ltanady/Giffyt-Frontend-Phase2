@@ -1,0 +1,89 @@
+@(firstItem: Product, items: List[Product], id: Long, includePrice: Boolean = true)
+@if(firstItem != null && items != null && items.size() > 0) {
+    @if(firstItem.isInstanceOf[StockProduct]) {
+    <div class="item_details_back@id item_details_back">
+        <div class="item_details@id item_details">
+            <div onclick="close_window(this);" class="close_btn">x</div>
+            <div data-brand="@firstItem.asInstanceOf[StockProduct].brand" class="item_detail_title">@firstItem.asInstanceOf[StockProduct].name</div>
+            <div class="item_detail_title_brand">by <b>@firstItem.asInstanceOf[StockProduct].brand</b></div>
+                <span class="item_detail_image_wrapper">
+                    @if(firstItem.asInstanceOf[StockProduct].productImages != null && firstItem.asInstanceOf[StockProduct].productImages.size() > 0) {
+                    <img class="item_detail_image" src="@firstItem.asInstanceOf[StockProduct].productImages.get(0).imageUrl" />
+                    <div id="item_@id" data-image="@firstItem.asInstanceOf[StockProduct].productImages.get(0).imageUrl"></div>
+                    }else {
+                    <img src="" />
+                    }
+                    <div class="item_detail_navigation">
+                        <span onclick="prev_image(this);" class="sprites-icon sprite-arrow-left item_detail_arrow_left"></span>
+                        <span class="item_detail_image_small_wrapper">
+                        @for(variations <- items){
+	                        <div data-title="@variations.asInstanceOf[StockProduct].name" data-desc="@variations.asInstanceOf[StockProduct].description" data-shipping="Shipping will cost @firstItem.asInstanceOf[StockProduct].country.currency @firstItem.asInstanceOf[StockProduct].additionalShippingCost. This item will be delivered in @firstItem.asInstanceOf[StockProduct].estimatedDelivery after being processed." style="display:none;" id="variation_@variations.id">
+                                @for(i <- 0 to variations.asInstanceOf[StockProduct].productImages.size()-1) {
+                                	<img class="item_detail_image_small" src="@variations.asInstanceOf[StockProduct].productImages.get(i).imageUrl" />
+                                }
+                            </div>
+		                }     
+                            <div class="item_detail_image_small_content">
+                                @for(i <- 0 to firstItem.asInstanceOf[StockProduct].productImages.size()-1) {
+                                <img class="item_detail_image_small" src="@firstItem.asInstanceOf[StockProduct].productImages.get(i).imageUrl" />
+                                }
+                            </div>
+                        </span>
+                        <span onclick="next_image(this);" class="sprites-icon sprite-arrow-right item_detail_arrow_right"></span>
+                    </div>
+                </span>
+                
+                <span class="item_detail_info_wrapper">
+                    <div class="item_detail_info_detail">@firstItem.asInstanceOf[StockProduct].description</div>
+                    @if(includePrice) {
+                    <div class="item_detail_info_price">
+                        @if(firstItem.asInstanceOf[StockProduct] != null && firstItem.asInstanceOf[StockProduct].price <= 0) {
+                        FREE
+                        } else {
+                        @firstItem.asInstanceOf[StockProduct].country.currency @firstItem.asInstanceOf[StockProduct].price
+                        }
+                    </div>
+                    <div class="item_detail_info_select_color">Select
+                        @if(firstItem.productAttributes != null && firstItem.productAttributes.size() > 0) {
+                            <span class="item_detail_info_select_type">@firstItem.asInstanceOf[StockProduct].productAttributes.get(0).name</span>
+                        }
+                    </div>
+                    }else {
+                    <div class="item_detail_info_select_color" style="margin-top:20px">Select
+                        @if(firstItem.productAttributes != null && firstItem.productAttributes.size() > 0) {
+                        <span class="item_detail_info_select_type">@firstItem.asInstanceOf[StockProduct].productAttributes.get(0).name</span>
+                        }
+                    </div>
+                    }
+                    <div class="item_detail_select_color_wrapper">
+	                    <select class="select_color" style="max-width:340px; width:auto; min-width:150px;" onchange="changeColor(this);">
+	                        @for(variationItem <- items){
+		                        @if(variationItem.isInstanceOf[StockProduct]){
+				                	<option value="@variationItem.id">
+                                        @if(variationItem.asInstanceOf[StockProduct].productAttributes != null && variationItem.asInstanceOf[StockProduct].productAttributes.size() > 0) {
+                                            @variationItem.asInstanceOf[StockProduct].productAttributes.get(0).value
+                                        }
+                                    </option>
+				                }
+			                }
+	                    </select>
+                    </div>
+                    <br />
+                    <a class="link" href="#"><div class="item_detail_info_select_gift_btn" @if(includePrice) {style="margin-top:20px"}>Select Gift</div></a>
+				    <div class="item_detail_info_shipping_detail">
+                        <span>Shipping Details</span>
+                        <p>
+                            @if(includePrice) {
+                                @if(firstItem.asInstanceOf[StockProduct] != null && firstItem.asInstanceOf[StockProduct].price <= 0) {
+                                    Free shipping.
+                                } else {
+                                    Shipping will cost @firstItem.asInstanceOf[StockProduct].country.currency @firstItem.asInstanceOf[StockProduct].additionalShippingCost.
+                                }
+                            }This item will be delivered in @firstItem.asInstanceOf[StockProduct].estimatedDelivery after being processed.</p>
+                    </div>
+
+                </span>
+        </div>
+    </div>
+    }
+}

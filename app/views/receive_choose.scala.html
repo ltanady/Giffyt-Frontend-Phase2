@@ -1,0 +1,363 @@
+@(gift: Gift, shipment: DeliveryDetail, otherItems: Map[String, List[Product]])
+@main("Giffyt - Open Your Gift") {
+<script src="@routes.Assets.at("javascripts/jquery-1.8.2.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery-ui-1.10.0.custom.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery.dd.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/form_validation.js")"></script>
+<script type="text/javascript" src='@routes.Assets.at("fancybox/jquery.fancybox.js?v=2.0.6")'></script>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/receive_choose.css")" type="text/css">
+<link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery-ui-1.10.0.custom.min.css")"/>
+<link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/dd.css")"/>
+<link rel="stylesheet" href="@routes.Assets.at("fancybox/jquery.fancybox.css")" type="text/css" media="screen"/>
+<style>
+    .item_detail_image_small_content{
+        width:1000px;
+    }
+
+    #inline { display: none; width: 600px; }
+</style>
+
+<script>
+    var left = 0;
+	$(document).ready(function(){
+        $("#fancybox").fancybox({
+            helpers : {
+                overlay: {
+                    opacity: 0.5, // or the opacity you want
+                    css: {'background-color': '#fff'} // or your preferred hex color value
+                } // overlay
+            }, // helpers
+            'scrolling'		: 'no',
+            'titleShow'		: false,
+            'onClosed'		: function() {
+                $("#login_error").hide();
+            }
+        });
+
+        $('#share_button').click(function(e){
+            e.preventDefault();
+            FB.ui({
+            display: 'popup',
+            method: 'feed',
+            name: @if(!gift.isSurprise){"I just received a Gift from @gift.senderName!"} else {"I just received a surprise Gift from @gift.senderName!"},
+            link: "http://www.giffyt.com",
+            picture: @if(!gift.isSurprise) {$("#gift_image").attr('src')} else {"https://s3-ap-southeast-1.amazonaws.com/giffyt/surprise_box.png"},
+            caption: "www.giffyt.com",
+            description: @if(!gift.isSurprise){$("#gift_name").text()} else {""}
+            },
+            function(response){
+            if(response && response.post_id) {
+            //self.location.href = 'http://www.thomaspynchon.com/inherent-vice.html'
+            }
+            else {
+            //self.location.href = 'http://www.google.com/'
+            }
+            });
+        });
+
+        @if(!gift.isSurprise) {
+		changeMainPic();
+
+		$("#change_btn").click(function(){
+			if($("#exchange_gift").is(":hidden"))
+			{
+				$("#exchange_gift").slideDown("fast");
+				pos = $("#exchange_gift").offset();
+				$("html, body").animate({scrollTop : (pos.top+20)+"px"}, "500");	
+				
+				changeMainPic();
+
+			}
+			else $("#exchange_gift").slideUp("fast");
+		});
+		
+		$(".item_detail_info_select_gift_btn").unwrap();
+		}
+
+		$("#confirm_btn").click(function(){
+            if(validateForm("gift_form", false)){
+                $("#gift_form").submit();
+            }
+            $("#confirm_btn").attr("disabled", "disabled");
+		});
+
+        $("#confirm_gift_btn").click(function(){
+            if(validateForm("gift_form", false)){
+                $("#fancybox").click();
+            }
+            $("#confirm_gift_btn").attr("disabled", "disabled");
+        });
+		
+		$("textarea").keypress(function(e){
+		    var text = $(this).val();
+		    temp = $(this).val().split("\n");
+		
+		
+			if ((e.keyCode != 46 && e.keyCode != 8) && (text.length >= 255 || temp.length > 8))
+			{
+				return false;
+			}
+		});
+	});
+
+    @if(!gift.isSurprise){
+    function showItem(id,e,itemCode) {
+		left = 0;
+	    var temp = document.getElementById(itemCode);
+	    if($(e).hasClass("selected"))
+		{
+			$(".dropdown_info").slideUp("slow");
+			$(e).removeClass("selected");
+		}
+		else
+		{
+	    	var detailClone = $(e).children(".itemVariationDetail").clone();
+			$(".select_color", detailClone).removeAttr('id');
+			$(".item_detail_select_color_wrapper", detailClone).html($(".ddOutOfVision", detailClone).html());
+			
+			if($(e).parent().siblings(".dropdown_info").css('display') == "none")
+				$(".dropdown_info").hide();
+			$(".item_image").removeClass("selected");
+	        var item = document.getElementById("item_"+id);
+	
+			$(e).parent().siblings(".dropdown_info").html(detailClone.html());
+	
+	        try {
+				$(".select_color").msDropDown();
+			} catch(el) {
+				alert(el.message);
+			}
+	
+			$(e).addClass("selected");
+			$(e).parent().siblings(".dropdown_info").slideDown("slow");
+			
+			currPos = $(e).parents(".gift_item").offset();
+			currPos = currPos.top;
+
+			$("html, body").animate({scrollTop : currPos+"px"}, "500");
+			
+			$(".item_detail_info_select_gift_btn").click(function(){
+				srcImage = $(this).parent().siblings(".item_detail_image_wrapper").children("img.item_detail_image").attr("src");
+				name = $(this).parent().siblings(".item_detail_title").html();
+				color = $(this).parents(".dropdown_info").find(".select_color option:selected").html();
+                type = $(this).parents(".dropdown_info").find(".item_detail_info_select_type").html();
+                id = $(this).parents(".dropdown_info").find(".select_color").val();
+				brand = $(this).parent().siblings(".item_detail_title").data("brand");
+							
+				$("#gift_box img").attr("src",srcImage);
+				$("#gift_name").html(name);
+                $("#gift_type").html(type+": "+color);
+				$("#gift_brand").html("by " + brand);
+				$("#gift_id").val(id);
+				action = document.giftForm.action;
+				action = action.split("/confirm/");
+				document.giftForm.action = action[0]+"/confirm/"+id;
+				
+	    		$("html, body").animate({scrollTop : "200px"}, "800");
+			});
+			
+			changeMainPic();
+			$(".item_detail_image_small.actived").removeClass("actived");
+			$(".item_detail_image_small_content .item_detail_image_small:first-child").addClass("actived");
+		}
+    }
+
+	function close_window(e)
+	{
+		$(e).parent().parent().parent().slideUp("slow");
+		$(".item_image").removeClass("selected");
+	}
+	
+	function changeColor(e)
+	{
+		id = $(e).val();
+		left = 0;
+		
+		var HTMLClone = $("#variation_"+id).clone();
+		$(".item_detail_image_small.actived:first-child", HTMLClone).removeClass("actived");
+		$(e).parents(".dropdown_info").find(".item_detail_image_small_content").html(HTMLClone.html());
+		imgSrc = $(".item_detail_image_small", HTMLClone).attr("src");
+		$(e).parents(".dropdown_info").find(".item_detail_image").attr("src", imgSrc);
+		$(e).parents(".dropdown_info").find(".item_detail_title").html(HTMLClone.data("title"));
+		$(e).parents(".dropdown_info").find(".item_detail_info_detail").html(HTMLClone.data("desc"));
+		$(e).parents(".dropdown_info").find(".item_detail_info_shipping_detail p").html(HTMLClone.data("shipping"));
+		changeMainPic();
+		$(".item_detail_image_small.actived").removeClass("actived");
+		$(".item_detail_image_small_content .item_detail_image_small:first-child").addClass("actived");
+	}
+	
+	
+	function changeMainPic()
+	{
+		$(".item_detail_image_small").removeClass("actived");
+		$(".item_detail_image_small").click(function(){
+			$(".item_detail_image_small").removeClass("actived");
+			$(this).addClass("actived");	
+			$(this).parent().parent().parent().siblings(".item_detail_image").attr("src",$(this).attr("src"));
+		});
+	}
+	
+
+	function next_image(e)
+	{
+		count = $(e).parent().find(".item_detail_image_small_content img").length;
+		
+		if(count > 4)
+		{
+			maxLeft = -62 * (count-4);
+			if(left>maxLeft)
+			{
+				$(e).parent().find(".item_detail_image_small_content").animate({"left" : "-="+62+"px"}, 500);
+				left -= 62;
+			}
+		}
+	}
+	
+	function prev_image(e)
+	{
+		count = $(e).parent().find(".item_detail_image_small_content img").length;
+		if(count > 4)
+		{
+			if(left<0)
+			{
+				$(e).parent().find(".item_detail_image_small_content").animate({"left" : "+="+62+"px"}, 500);
+				left += 62;
+			}
+		}
+	}
+    }
+</script>
+<div id="content">
+	<div id="received_content">
+        <div id="content_header">You've received a gift from @{gift.senderName}.</div>
+        <div id="left_content">
+            @if(!gift.isSurprise){
+            <div id="gift_box">
+                <img id="gift_image" src="@{gift.product.asInstanceOf[StockProduct].productImages.get(0).imageUrl}"/>
+            </div>
+            <div id="gift_detail">
+                <div id="left_title">Selected Gift</div>
+                <div id="gift">
+                    <div id="gift_desc">
+                        <div id="gift_name">@{gift.product.asInstanceOf[StockProduct].name}</div>
+                        <div id="gift_type">@{gift.product.asInstanceOf[StockProduct].productAttributes.get(0).name}: @{gift.product.asInstanceOf[StockProduct].productAttributes.get(0).value}</div>
+                        <div id="gift_brand">by @{gift.product.asInstanceOf[StockProduct].brand}</div>
+                    </div>
+                </div>
+                <div id="change_btn">Change Gift</div>
+            </div>
+            }else {
+            <div id="gift_box_surprise">
+            </div>
+            }
+        </div>
+
+        <div id="right_content">
+            <form name="giftForm" id="gift_form" action="" method="post">
+                <div id="message_tag">@gift.message</div>
+                <div id="for_yourself">
+                    @if(shipment != null) {
+                    <div class="input_title">Recipient's Name</div>
+                    <input class="info" id="recipientName" name="recipientName" type="text" style="margin-bottom:20px;" placeholder="Recipient's name" value="@shipment.recipientName"/>
+                    <div class="input_title">Contact Number</div>
+                    <input class="infoAddress" id="contactNumber" name="contactNumber" type="text" style="margin-bottom:20px;" placeholder="Phone number" value="@shipment.contactNumber"/>
+                    <div class="input_title">Delivery Address</div>
+                    <textarea class="infoAddress" id="address" name="address" maxlength="255" onpaste="return false;" style="width:355px; height:100px;" placeholder="Address">@shipment.address</textarea>
+                    <input class="infoAddress" id="city" name="city" type="text" placeholder="City" value="@shipment.city" />
+                    <input class="infoAddress" id="state" name="state" type="text" placeholder="State" value="@shipment.state"/>
+                    <input type="text" id="country" name="country" placeholder="Country" readonly="readonly" value="@shipment.country.name"/>
+                    <input id="countryId" name="countryId" type="hidden" value="@gift.product.country.id">
+                    <input class="infoAddress" id="postalCode" name="postalCode" type="text" placeholder="Postal code" value="@shipment.postalCode"/>
+                    @*@if(gift.product.campaign!=null){
+                    <div id="confirm_campaign_btn">Confirm Gift</div>
+                    <a id="fancybox" href="#inline" class="fancybox_hidden"></a>
+                    } else {
+                    <div id="confirm_btn">Confirm Gift</div>
+                    }*@
+                    <div id="confirm_gift_btn">Confirm Gift</div>
+                    <a id="fancybox" href="#inline" class="fancybox_hidden"></a>
+                    }else {
+                    <div class="input_title">Recipient's Name</div>
+                    <input class="info" id="recipientName" name="recipientName" type="text" style="margin-bottom:20px;" placeholder="Recipient's name" value=""/>
+                    <div class="input_title">Contact Number</div>
+                    <input class="infoAddress" id="contactNumber" name="contactNumber" type="text" style="margin-bottom:20px;" placeholder="Phone number" value=""/>
+                    <div class="input_title">Delivery Address</div>
+                    <textarea class="infoAddress" id="address" name="address" style="width:315px; height:100px;" placeholder="Address"></textarea>
+                    <input class="infoAddress" id="city" name="city" type="text" placeholder="City" value="" />
+                    <input class="infoAddress" id="state" name="state" type="text" placeholder="State" value=""/>
+                    <input type="text" id="country" name="country" placeholder="Country" readonly="readonly" value="@gift.product.country.name"/>
+                    <input id="countryId" name="countryId" type="hidden" value="@gift.product.country.id">
+                    <input class="infoAddress" id="postalCode" name="postalCode" type="text" placeholder="Postal code" value=""/>
+                    @*@if(gift.product.campaign!=null){
+                    <div id="confirm_campaign_btn">Confirm Gift</div>
+                    <a id="fancybox" href="#inline" class="fancybox_hidden"></a>
+                    } else {
+                    <div id="confirm_btn">Confirm Gift</div>
+                    } *@
+                    <div id="confirm_gift_btn">Confirm Gift</div>
+                    <a id="fancybox" href="#inline" class="fancybox_hidden"></a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if(!gift.isSurprise){
+    <div id="exchange_gift">
+    	<div id="exchange_title">Available gifts for exchange</div>
+        <div id="exchange_content">
+        @for(((itemCode, variations), i) <- otherItems.toList.zipWithIndex) {
+			@if((i+1)%4 == 1){
+			<div class="gift_row">
+			}
+			@if(variations != null && variations.size() > 0) {
+			<div id="tempObject@(i+1)" class="gift_item">
+				<div class="item_image" onclick="showItem(@{(i+1)%4},this,'tempObject@(i+1)')">
+                @if(variations.get(0).asInstanceOf[StockProduct].productImages != null && variations.get(0).asInstanceOf[StockProduct].productImages.size() > 0) {
+				<div class="itemVariationDetail">@itemDetail(variations.get(0),variations,(i+1)%4,false)</div>
+				<img src="@variations.get(0).asInstanceOf[StockProduct].productImages.get(0).imageUrl" />
+				<div id="item_@(i+1)" data-image="@variations.get(0).asInstanceOf[StockProduct].productImages.get(0).imageUrl"></div>
+				}else {
+				<img src="" />
+				}
+				</div>
+                
+				@if(variations.get(0).isInstanceOf[StockProduct]) {
+				<div class="item_desc">@variations.get(0).asInstanceOf[StockProduct].name</div>
+				}
+			</div>
+			}
+			@if((i+1)%4==0 || (i+1)==otherItems.size()){
+				<div class="dropdown_info">@itemDetail(variations.get(0),variations,(i+1)%4,false)</div>
+			    </div>
+			}
+		}
+       	</div>
+    </div>
+    }
+    <!--for friend-->
+</div>
+
+<div id="inline" style="width:600px;height:320px">
+    <h2>Support Us on Facebook</h2>
+
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=377517262283023";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+    <div style="margin-bottom:10px;">Like us so we can continue to provide you with better service.</div>
+    <div class="fb-like" data-href="http://www.facebook.com/Giffyt" data-send="false" data-width="350" data-show-faces="true" data-font="arial"></div>
+    <div class="campaign_or">Or</div>
+    <a href="#"><div id="share_button" class="fb_colour">Share on Facebook</div></a>
+
+    <div class="continue_btn" id="container_like" align="center">
+        <div id="confirm_btn">Continue</div>
+    </div>
+</div>
+}(true)(false)(null)("receive_choose")

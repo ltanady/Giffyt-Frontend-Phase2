@@ -1,0 +1,27 @@
+#info_list
+{
+	width:580px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.info_row
+{
+	border-bottom:#CCC 1px solid;
+	width:580px;
+	color:#8c8c8c;
+}
+
+.info_header
+{
+	font-weight:bold;
+	font-size:18px;
+	margin-top:30px;
+	margin-bottom:15px;
+}
+
+.info_detail
+{
+	margin-bottom:30px;
+	font-size:14px;
+}

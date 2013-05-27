@@ -1,0 +1,88 @@
+#content
+{
+	margin:auto;
+	width:965px;
+	font-family:"Lucida Grande", sans-serif;
+}
+
+#message
+{
+	margin:20px 0px;
+	color:#8c8c8c;
+	font-weight:bold;
+}
+
+#open_btn
+{
+	background-color:#00a8d3;
+	border-color:#0097be;
+	font-weight:bold;
+	width:180px;
+	padding:10px 0px;
+	color:#fff;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	margin:auto;
+	box-shadow:0px 1px 7px -3px #000;
+	cursor:pointer;
+}
+
+#login_text
+{
+	color:#00aedb;
+	font-weight:bold;	
+	font-size:24px;
+	border-bottom:dashed 1px #cacaca;
+	margin-top:15px;
+	margin-bottom:15px;
+	margin-right:20px;
+}
+
+#login_text2
+{
+	color:#afafaf;
+	font-size:20px;
+    font-style:italic;
+	margin-bottom:30px;
+	margin-right:20px;
+}
+
+#lfooter
+{
+	height:280px;	
+	background:#00aedb;
+}
+
+.login_item
+{
+	width:170px;
+	display:inline-block;
+	vertical-align:top;
+	color:#FFF;
+	font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size:12px;
+}
+.login_separator
+{
+	vertical-align:top;
+	width:24px;
+	display:inline-block;	
+	text-align:center;
+	margin-top:40px;
+}
+
+.footer_image
+{
+	position:relative;
+	text-align:center;
+	height:120px;
+	margin-bottom:20px;
+}
+.footer_image img
+{
+	bottom:1px;
+	left:30px;
+	vertical-align:bottom;
+	position:absolute;
+}

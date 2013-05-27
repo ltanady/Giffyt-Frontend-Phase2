@@ -1,0 +1,122 @@
+@font-face{
+	font-family:fontin;
+	src: url("../fonts/fontinregular.ttf");
+}
+
+::-webkit-input-placeholder { font-weight:bold; }
+::-moz-placeholder { font-weight:bold; } /* firefox 19+ */
+:-ms-input-placeholder { font-weight:bold; } /* ie */
+input:-moz-placeholder { font-weight:bold; }
+
+img
+{
+	border:none;
+}
+
+html{
+	position:relative;
+}
+
+body{
+	margin-bottom:50px;
+}
+
+#back_to_top{
+	display:none;
+	position:fixed;
+	bottom:50px;
+	left:50%;
+	margin-left:483px;
+	width:48px;
+	height:48px;
+	border:1px solid #f0f0f0;
+	background:#FFF url(../images/icons/back_to_top.png) center center no-repeat;
+	cursor:pointer;
+	display:none;
+}
+
+#back_to_top:before{
+	content:"";
+	display:block;
+	position:absolute;
+	width:50px;
+	height:2px;
+	bottom:-3px;
+	left:-1px;
+	background:#dedede;
+}
+
+#dvLoading{
+    background:#fff ;
+    position:absolute;
+  	top:0px;
+  	left:0px;
+  	width:100%;
+  	height:200%;
+  	opacity: .0;
+  	filter:alpha(opacity=0);
+  	z-index:50;
+  	display:none;
+}
+
+#dvLoadingGif{
+    background: url(../images/loading_animation.gif) no-repeat center center ;
+  	position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:50;
+    display:none;
+    text-align:center;
+}
+
+
+#loadingDiv {
+  width:100%;
+  height:100%;
+  position:fixed !important;
+  position:absolute; /* IE6 Fallback */
+  top:0px;
+  right:0px;
+  bottom:0px;
+  left:0px;
+  z-index:999999;
+  background:transparent url(../images/overlay.png) repeat top left;
+  /*background:#3A3A3A url(http://3.bp.blogspot.com/-_ONDmjNBMJs/TwPCL3AdlII/AAAAAAAAB4c/02MboPkAHGg/s1600/layer_loading.gif) no-repeat center;*/
+  color:transparent !important;
+  text-indent:-99999px;
+}
+
+input.error, input.errorAddress, textarea.error, textarea.errorAddress { border-color: #973d3d !important; border-style: solid !important; background: #f0bebe; }
+input.error:focus, input.errorAddress:focus, textarea.error:focus, textarea.errorAddress:focus { border-color: #973d3d; color: #a35959; }
+
+.sprites{background: url(../images/sprite-image.png) no-repeat top left;}
+.sprite-arrow-next{ background-position: 0 0; width: 23px; height: 70px; } 
+.sprite-birthday{ background-position: -28px 0; width: 32px; height: 38px; } 
+.sprite-checkbox{ background-position: -65px 0; width: 23px; height: 22px; } 
+.sprite-checkbox_checked{ background-position: -93px 0; width: 23px; height: 22px; } 
+.sprite-fb-button1{ background-position: -121px 0; width: 198px; height: 34px; cursor:pointer;} 
+.sprite-fb-button1:hover{ background-position: -324px 0; width: 198px; height: 34px; } 
+.sprite-fb_footer{ background-position: -527px 0; width: 20px; height: 21px; } 
+.sprite-logo{ background-position: -552px 0; width: 140px; height: 54px; } 
+.sprite-logo_beta{ background-position: -697px 0; width: 175px; height: 54px; } 
+.sprite-love{ background-position: -877px 0; width: 32px; height: 39px; } 
+
+
+
+.sprites-icon{background: url(../images/sprite-icon.png) no-repeat top left;}
+.sprite-arrow-down{ background-position: 0 0; width: 12px; height: 8px; } 
+.sprite-arrow-left-disabled{ background-position: 0 -58px; width: 16px; height: 24px; } 
+.sprite-arrow-left{ background-position: 0 -132px; width: 16px; height: 24px; } 
+.sprite-arrow-right-disabled{ background-position: 0 -206px; width: 16px; height: 24px; } 
+.sprite-arrow-right{ background-position: 0 -280px; width: 16px; height: 24px; } 
+.sprite-back_to_top{ background-position: 0 -354px; width: 26px; height: 15px; } 
+.sprite-drop-down-arrow{ background-position: 0 -419px; width: 12px; height: 7px; } 
+.sprite-icon-gift-active{ background-position: 0 -476px; width: 26px; height: 40px; } 
+.sprite-icon-gift-gray{ background-position: 0 -566px; width: 26px; height: 40px; } 
+.sprite-icon-gift{ background-position: 0 -656px; width: 26px; height: 40px; } 
+.sprite-icon-mail-active{ background-position: 0 -746px; width: 28px; height: 40px; } 
+.sprite-icon-mail{ background-position: 0 -836px; width: 28px; height: 40px; } 
+.sprite-icon-people{ background-position: 0 -926px; width: 24px; height: 40px; } 
+.sprite-notif-bg{ background-position: 0 -1016px; width: 20px; height: 20px; }

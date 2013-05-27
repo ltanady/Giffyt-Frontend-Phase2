@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Giffyt - Public Beta</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" type="text/css">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/signup.css")" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/style.css")" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/footer.css")" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36579053-1']);
+        _gaq.push(['_setDomainName', 'giffyt.com']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body>
+<div id="dvLoading"></div>
+<div id="dvLoadingGif"></div>
+<div id="wrapper">
+    <div id="gift">
+        <div style="width:265px; height:240px;float:right; margin-top:240px; margin-right:20px;">
+            <div id="login_text" style="">Get started!</div>
+            <div id="login_text2" style="margin-bottom:15px;">Giffyt makes it simple to pick a gift to celebrate your loved ones.</div>
+            <div id="login" class="sprites sprite-fb-button1"></div>
+        </div>
+    </div>
+</div>
+<div style="clear:both;"></div>
+<div id="lfooter">
+    <div style="margin-left:auto; margin-right:auto; width:580px;">
+        <div class="login_item">
+            <div class="footer_image">
+            	<img src="@routes.Assets.at("images/1.png")"/>
+            </div>
+            Select from your list of Facebook friends or events to celebrate.
+        </div>
+        <div class="sprites sprite-separator login_separator"></div>
+        <div class="login_item">
+            <div class="footer_image">
+                <img src="@routes.Assets.at("images/2.png")"/>
+            </div>
+            Decide on a budget and suitable gift from the list of curated items. Do not worry about getting the right gift, your friend will have a chance to decide on the gift.
+        </div>
+        <div class="sprites sprite-separator login_separator"></div>
+        <div class="login_item">
+            <div class="footer_image">
+                <img src="@routes.Assets.at("images/3.png")"/>
+            </div>
+            Make payment using Paypal or Credit card and your friend will be notified on the gift.
+        </div>
+
+    </div>
+</div>
+@footer(null)
+</body>
+<!-- Jquery -->
+<script type="text/javascript" src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")'></script>
+<script type="text/javascript" src='@routes.Assets.at("javascripts/fb.js")'></script>
+<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+</html>

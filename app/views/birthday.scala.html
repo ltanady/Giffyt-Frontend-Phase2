@@ -1,0 +1,188 @@
+@(event: Event, friends: List[User],
+currentDate: org.joda.time.DateTime,
+nextDate: org.joda.time.DateTime,
+nextMonth: org.joda.time.DateTime,
+hasNoEvents: Boolean = false)
+@main("Giffyt - Friends") {
+    <script src="@routes.Assets.at("javascripts/jquery-ui.js")" type="text/javascript"></script>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/birthday.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui.css")">
+	<div id="content">
+	    <div id="content_header">
+	        <div id="friend_name">
+	        	Send a gift to <input id="autocomplete" type="text" placeholder="Enter friend's name">
+                <script>
+					$( "#autocomplete" ).autocomplete({
+						source: [
+							@if(friends != null && friends.size() > 0) {
+                                @for((friend, i) <- friends.zipWithIndex) {
+                                	@if(i+1 < friends.size() ) {
+	                                 	   { label: "@friend.name", id: "@friend.facebookId", img: "http://graph.facebook.com/@friend.facebookId/picture" },
+									} else {
+				                     	   { label: "@friend.name", id: "@friend.facebookId", img: "http://graph.facebook.com/@friend.facebookId/picture" }
+									}
+								}
+							}
+						]
+					});
+					$( "#autocomplete" ).autocomplete({
+						select: function( event, ui ) {
+						document.location.href = "@routes.Friends.eventsFriends()/"+ui.item.id;
+						
+						}
+					});
+					$( "#autocomplete" ).autocomplete({}).data("uiAutocomplete")._renderItem = function (ul, item) {
+						return $("<li />")
+							.data("item.autocomplete", item)
+							.append( $( "<a>" ).html( '<img src="'+item.img+'" /> '+ item.label ) )
+							.appendTo(ul);
+					};   
+				</script>
+	        </div>
+	        <div id="or"><hr/>&nbsp;&nbsp; OR &nbsp;&nbsp;<hr/></div>
+	        <div id="celebrate">Celebrate an event</div>
+	    </div>
+	    
+	    <div id="event">
+            <div class="event_row">
+	        	<div class="event_date">
+	                <div class="event_day">Today</div>
+	                <div class="calendar">
+	                	<div class="calendar_date">@currentDate.toString("dd")</div>
+	                    <div class="calendar_month">@currentDate.toString("MMM")</div>
+	                </div>
+	            </div>
+	            <div class="photos">
+	            	<a href="@routes.Friends.celebrateFriend(session().get("facebookId"))" id="@session().get("facebookId")" value="">
+
+                    <div class="photo_box">
+                    <div class="photo">
+                    	<div class="shadow_box"></div>
+	                	<img class="user_photo" src="https://graph.facebook.com/@session().get("facebookId").toLong/picture?type=large">
+	                	<div class="sprites sprite-birthday photo_icon"></div>
+	                </div>
+                        <div class="photo_name">Yourself</div>
+                        <div class="photo_detail">
+                                
+                        </div>
+	                </div>
+                    </a>
+
+                    @if(event.today != null && event.today.size() > 0) {
+                        @for(friend <- event.today) {
+                        <a href="@routes.Friends.celebrateFriend(friend.facebookId)" id="@friend.facebookId" value="">
+                        <div class="photo_box">
+                        <div class="photo">
+                            <div class="shadow_box"></div>
+                            <img class="user_photo" src="https://graph.facebook.com/@friend.facebookId/picture?type=large">
+                            <div class="sprites sprite-birthday photo_icon"></div>
+                        </div>
+                            <div class="photo_name">@friend.name</div>
+                            <div class="photo_detail">
+                                @if(friend.age != null) {
+                                    @friend.age years old
+                                }
+                            </div>
+                        </div>
+                        </a>
+                        }
+                    }
+	            </div>
+	        </div>
+
+            @if(event.tomorrow != null && event.tomorrow.size() > 0) {
+            <div class="event_row">
+	        	<div class="event_date">
+	                <div class="event_day">Tomorrow</div>
+	                <div class="calendar">
+	                	<div class="calendar_date">@nextDate.toString("dd")</div>
+	                    <div class="calendar_month">@nextDate.toString("MMM")</div>
+	                </div>
+	            </div>
+	            <div class="photos">
+                    @for(friend <- event.tomorrow) {
+                    <a href="@routes.Friends.celebrateFriend(friend.facebookId)" id="@friend.facebookId" value="">
+                    <div class="photo_box">
+                    <div class="photo">
+	                	<div class="shadow_box"></div>
+	                	<img class="user_photo" src="https://graph.facebook.com/@friend.facebookId/picture?type=large">
+	                	<div class="sprites sprite-birthday photo_icon"></div>
+	                </div>
+	                	<div class="photo_name">@friend.name</div>
+                        <div class="photo_detail">
+                            @if(friend.age != null) {
+                            @friend.age years old
+                            }
+                        </div>
+                    </div>
+                    </a>
+                    }
+	            </div>
+	        </div>
+            }
+
+            @if(event.thisMonth != null && event.thisMonth.size() > 0) {
+            <div class="event_row">
+	        	<div class="event_date">
+	                <div class="event_day">This Month</div>
+	                <div class="calendar">
+	                    <div class="calendar_month2">@currentDate.toString("MMM")</div>
+	                </div>
+	            </div>
+                <div class="photos">
+                    @for(friend <- event.thisMonth) {
+                    <a href="@routes.Friends.celebrateFriend(friend.facebookId)" id="@friend.facebookId" value="">
+                    <div class="photo_box">
+                        <div class="photo ">
+							<div class="shadow_box"></div>
+		                	<img class="user_photo" src="https://graph.facebook.com/@friend.facebookId/picture?type=large">
+		                	<div class="sprites sprite-birthday photo_icon"></div>
+						</div>
+                        <div class="photo_name">@friend.name</div>
+                        <div class="photo_detail">
+                            @friend.birthday.toString("dd MMM")
+                            @if(friend.age != null) {
+                            , @friend.age years old
+                            }
+                        </div>
+                    </div>
+                    </a>
+                    }
+                </div>
+	        </div>
+            }
+
+            @if(event.nextMonth != null && event.nextMonth.size() > 0) {
+            <div class="event_row">
+                <div class="event_date">
+                    <div class="event_day">Next Month</div>
+                    <div class="calendar">
+                        <div class="calendar_month2">@nextMonth.toString("MMM")</div>
+                    </div>
+                </div>
+                <div class="photos" style="padding-bottom:0px;">
+                    @for(friend <- event.nextMonth) {
+                    <a href="@routes.Friends.celebrateFriend(friend.facebookId)" id="@friend.facebookId" value="">
+                    <div class="photo_box">
+                        <div class="photo">
+		                	<div class="shadow_box"></div>
+		                	<img class="user_photo" src="https://graph.facebook.com/@friend.facebookId/picture?type=large">
+		                	<div class="sprites sprite-birthday photo_icon"></div>
+	                	</div>
+                        <div class="photo_name">@friend.name</div>
+                        <div class="photo_detail">
+                            @friend.birthday.toString("dd MMM")
+                            @if(friend.age != null) {
+                            , @friend.age years old
+                            }
+                        </div>
+                    </div>
+                    </a>
+                    }
+                </div>
+            </div>
+            }
+	    </div>
+	</div>
+
+}(true)(true)(null)("birthday")

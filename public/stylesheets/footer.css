@@ -1,0 +1,46 @@
+#main_footer
+{
+	background-color:#ebebeb;
+	width:100%;
+	font-family:"Lucida Grande", sans-serif;
+	padding: 15px 0px;
+	font-size:12px;
+	min-width:965px;
+	position:absolute;
+	bottom:0px;
+}
+
+#footer_content
+{
+	color:#aaaaaa;
+	margin:auto;
+	width:965px;
+}
+
+#copyright
+{
+	display:inline-block;
+}
+
+#footer_menu
+{
+	float:right;
+	display:inline-block;
+}
+
+a.menu_btn
+{
+	display:inline-block;
+	border-bottom:1px solid #aaaaaa;
+	margin-right:20px;
+	cursor:pointer;
+	text-decoration:none;
+	color:#aaaaaa;
+}
+
+#footer_menu img
+{
+	vertical-align:top;
+	display:inline-block;
+	margin-left:10px;
+}

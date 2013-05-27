@@ -1,0 +1,379 @@
+@(friend: User, countries: List[Country], items: Map[String, List[Product]])
+@main("Giffyt - Gift") {
+<link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery-ui-1.10.0.custom.min.css")"/>
+<link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/dd.css")"/>
+<link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/gift.css")"/>
+<script src="@routes.Assets.at("javascripts/jquery-1.8.2.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery-ui-1.10.0.custom.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery.dd.min.js")"></script>
+<script language="javascript">
+    var minBudget = 0, maxBudget = 300;
+    var left = 0;
+	windowH = 0;
+    current_location = -1;
+    $(document).ready(function(e) {
+		changeMainPic();
+	
+		try {
+	    	$("#location").msDropDown();
+	    } catch(e) {
+	    	alert(e.message);
+	    }
+	 
+	    $( "#slider-budget" ).slider({
+		    range: true,
+		    values: [0, 300],
+		    min: 0,
+		    max: 700,
+		    slide: function( event, ui ) {
+				$(".gift_item").addClass("gift_item_unloaded");
+		    	event.stopPropagation();
+			    minBudget = ui.values[0];
+			    maxBudget = ui.values[1];
+			    $('#slider-meter span').each(function(){
+			  		budget_meter = parseInt($(this).text());
+			  		if(budget_meter >= minBudget && budget_meter <= maxBudget)
+			  			$(this).addClass('active');
+			  		else
+			  			$(this).removeClass('active');
+			    });
+			    
+				$(".dropdown_info").hide();
+				$(".gift_item").each(function(){
+				    if($(this).data("price") >= minBudget && $(this).data("price") <= maxBudget)
+				    {
+				    	$(this).css('display', 'inline-block');
+				    }
+				    else
+				    {
+				    	$(this).hide();	
+				    }
+				});
+			    $(".gift_item").css('margin-bottom', '10px');
+	            restruct_items();
+	            load_more();
+		    }
+	    });
+	    
+	    $('#slider-meter span').each(function(){
+	  		budget_meter = parseInt($(this).text());
+	  		if(budget_meter >= minBudget && budget_meter <= maxBudget)
+	  			$(this).addClass('active');
+	  		else
+	  			$(this).removeClass('active');
+	    });
+	    
+    	
+    	$("#back_to_top").click(function(){
+	    	$("html, body").animate({scrollTop : "0px"}, "800");
+    	});
+		changeCountry();
+		windowH = window.innerHeight;
+		$(window).resize(function(){
+			windowH = window.innerHeight;
+		});
+    });
+
+    function showItem(e) {
+		url = document.URL;
+		left = 0;
+    	var gift_offset = $(e).parents(".gift_item").offset();
+		arrow_pos = ($(e).parents(".gift_item").data('location'))%4;
+	    var detailClone = $(e).children(".itemVariationDetail").clone();
+	    if($(e).hasClass("selected"))
+		{
+			$(".dropdown_info").slideUp("slow");
+			$(".gift_item").animate({"margin-bottom" : "10px"}, "slow");
+			$(e).removeClass("selected");
+		}
+		else
+		{
+			$(".item_image").removeClass("selected");
+						
+			$(".select_color", detailClone).removeAttr('id');
+			$(".item_detail_select_color_wrapper", detailClone).html($(".ddOutOfVision", detailClone).html());
+			$(".item_details_back", detailClone).removeClass("item_details_back0").removeClass("item_details_back1").removeClass("item_details_back2").removeClass("item_details_back3").addClass("item_details_back"+(arrow_pos))
+			$(".item_details", detailClone).removeClass("item_details0").removeClass("item_details1").removeClass("item_details2").removeClass("item_details3").addClass("item_details"+(arrow_pos))
+			
+			
+			if($(".dropdown_info").css('display') == "none")
+			{
+				$(".dropdown_info").html(detailClone.html());
+				top_from_available_gift = gift_offset.top - 308;
+    			gift_height = $(e).parents(".gift_item").height();
+    			gift_offset = $(e).parents(".gift_item").offset();
+				$('.dropdown_info').css('top', (top_from_available_gift + gift_height + 10) + 'px');
+			}
+			
+			$(e).addClass("selected");
+			ddi_h = $(".dropdown_info").height();
+        	if(parseInt((current_location-1)/4) == parseInt(($(e).parents(".gift_item").data("location")-1)/4))
+        	{
+	        	$(".dropdown_info").html(detailClone.html());
+	        		
+				try {
+		   	 		$(".select_color").msDropDown();
+		   		} catch(e) {
+		  	 		alert(e.message);
+		  	 	}
+		 		
+				itemDetailElement = $(".dropdown_info").children().children().children(".item_detail_info_wrapper");
+				colorId = itemDetailElement.children(".item_detail_select_color_wrapper").children().children(".select_color").val();
+				itemDetailElement.children(".link").attr("href",url+"/give/"+colorId);
+				changeMainPic();set_detail_wrapper_width();
+				$(e).parents(".gift_item").animate({"margin-bottom" : (ddi_h+50) + "px"}, "slow");
+				$(".dropdown_info").slideDown("slow");
+        	}
+        	else
+        	{
+		        if(!$(".dropdown_info").is(":hidden"))
+		        {
+					$(".gift_item").animate({"margin-bottom" : "10px"}, "slow", function(){
+	    				gift_offset = $(e).parents(".gift_item").offset();
+	    				gift_height = $(e).parents(".gift_item").height();
+						top_from_available_gift = gift_offset.top - 308;
+						$('.dropdown_info').css('top', (top_from_available_gift + gift_height + 10) + 'px');
+					});
+					$(".dropdown_info").slideUp("slow", function(){
+			        	$(".dropdown_info").html(detailClone.html());	
+						try {
+				   	 		$(".select_color").msDropDown();
+				   		} catch(e) {
+				  	 		alert(e.message);
+				  	 	}
+				 		changeMainPic();set_detail_wrapper_width();
+						itemDetailElement = $(".dropdown_info").children().children().children(".item_detail_info_wrapper");
+						colorId = itemDetailElement.children(".item_detail_select_color_wrapper").children().children(".select_color").val();
+						itemDetailElement.children(".link").attr("href",url+"/give/"+colorId);
+			        });
+				}
+				else
+				{
+		        	$(".dropdown_info").html(detailClone.html());
+		        		
+					try {
+			   	 		$(".select_color").msDropDown();
+			   		} catch(e) {
+			  	 		alert(e.message);
+			  	 	}
+			 		set_detail_wrapper_width();
+					itemDetailElement = $(".dropdown_info").children().children().children(".item_detail_info_wrapper");
+					colorId = itemDetailElement.children(".item_detail_select_color_wrapper").children().children(".select_color").val();
+					itemDetailElement.children(".link").attr("href",url+"/give/"+colorId);
+					
+				}
+		        
+				$(e).parents(".gift_item").animate({"margin-bottom" : (ddi_h+50) + "px"}, "slow");
+				$(".dropdown_info").slideDown("slow",function(){
+					$("html, body").animate({scrollTop : gift_offset.top+"px"}, "500");
+				});
+				
+				
+				changeMainPic();set_detail_wrapper_width();
+        	}
+			current_location = $(e).parents(".gift_item").data("location");
+			set_detail_wrapper_width();
+			$(".item_detail_image_small_content .item_detail_image_small:first-child").addClass("actived");			
+		}
+	}
+
+function close_window(e)
+{
+	$(e).parent().parent().parent().slideUp("slow");
+	$(".item_image").removeClass("selected");
+	$(".gift_item").animate({"margin-bottom" : "10px"}, "slow");
+}
+
+function changeCountry()
+{
+	$("#no_location").hide();
+	$("#goods").hide();
+	var loc = $("#location").val();
+	if(loc!="Select Country") {
+		$("#loading").show();
+	    var url = '/products/list?countryCode=' + loc;
+	
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: "",
+            success: function(response) {
+                $('#available_gift').empty().html(
+                    response
+                );
+                $("#goods").css("display","inline-block");
+                restruct_items();
+                load_more();
+                $("#loading").hide();
+                $(document).bind("scroll", function(){
+                    if((document.body.scrollHeight-windowH) == $(document).scrollTop() && $(".gift_item_unloaded").length>0)
+                    {
+                        $("#loading").show();
+                        setTimeout('$("#loading").hide()', 2000);
+                        setTimeout('load_more()', 2000);
+                    }
+                });
+            },
+            error: function (responseData, textStatus, errorThrown) {
+                $("#goods").hide();
+                $("#no_location").css("display","inline-block");
+            },
+            complete: function(){
+            }
+        });
+    } else {
+        $("#goods").hide();
+        $("#no_location").css("display","inline-block");
+    }
+}
+
+function changeColor(e)
+{
+	id = $(e).val();
+	left = 0;
+	var HTMLClone = $("#variation_"+id).clone();
+	$(e).parents(".dropdown_info").find(".item_detail_image_small_content").html(HTMLClone.html());
+	imgSrc = $(".item_detail_image_small", HTMLClone).attr("src");
+	$(e).parents(".dropdown_info").find(".item_detail_image").attr("src", imgSrc);
+	changeMainPic();
+	$(".item_detail_image_small_content .item_detail_image_small:first-child").addClass("actived");
+	$(e).parents(".dropdown_info").find(".item_detail_title").html(HTMLClone.data("title"));
+	$(e).parents(".dropdown_info").find(".item_detail_info_detail").html(HTMLClone.data("desc"));
+	$(e).parents(".dropdown_info").find(".item_detail_info_shipping_detail p").html(HTMLClone.data("shipping"));
+	
+	url = document.URL;
+	$(e).parents(".item_detail_select_color_wrapper").siblings(".link").attr("href",url+"/give/"+id);
+	set_detail_wrapper_width();
+}
+
+function changeMainPic()
+{
+	$(".item_detail_image_small").removeClass("actived");
+	$(".item_detail_image_small_content .item_detail_image_small:first-child").addClass("actived");
+	$(".item_detail_image_small").click(function(){
+		$(".item_detail_image_small").removeClass("actived");
+		$(this).addClass("actived");	
+    	$(this).parent().parent().parent().siblings(".item_detail_image").attr("src",$(this).attr("src"));
+    });
+}
+
+function restruct_items()
+{
+	i=1;
+	$(".gift_item").each(function(){
+		if($(this).data("price")>=minBudget &&  $(this).data("price")<=maxBudget)
+		{
+			$(this).data("location", i);
+			i++;
+		}
+	})
+}
+
+function load_more(){
+    i=0;
+	$(".gift_item_unloaded").each(function(){
+		if(i<20)
+		{
+			$(this).removeClass("gift_item_unloaded");
+			if(!$(this).is(":hidden"))
+				i++;
+		}
+		else
+		{
+			return false;
+		}
+	});
+}
+
+function next_image(e)
+{
+	count = $(e).parent().find(".item_detail_image_small_content img").length;
+	
+	if(count > 4)
+	{
+		maxLeft = -62 * (count-4);
+		if(left>maxLeft)
+		{
+			$(e).parent().find(".item_detail_image_small_content").animate({"left" : "-="+62+"px"}, 500);
+			left -= 62;
+		}
+	}
+}
+
+function prev_image(e)
+{
+	count = $(e).parent().find(".item_detail_image_small_content img").length;
+	if(count > 4)
+	{
+		if(left<0)
+		{
+			$(e).parent().find(".item_detail_image_small_content").animate({"left" : "+="+62+"px"}, 500);
+			left += 62;
+		}
+	}
+}
+
+function set_detail_wrapper_width(){
+	total_item = $(".dropdown_info .item_detail_image_small_content .item_detail_image_small").length;
+	w = (total_item*60);
+	//$(".item_detail_image_small_content").width(w);
+}
+
+</script>
+<div id="content">
+    <div id="location_select">
+    	<div class="gift_title" style="margin-left:-5px;"><b>@if(session().get("facebookId") != friend.facebookId){Friend's}else{Your} location</b></div>
+    	<select id="location" onchange="changeCountry();">
+            @if(friend.country == null) {
+                <option id="select_country" style="color:#00addb" value="Select Country">Select Country</option>
+
+            }
+
+            @for(country <- countries) {
+                @if(friend.country != null) {
+
+                    @if(friend.country.id == country.id) {
+                        <option data-image="@country.imageUrl" value="@country.code" selected>@country.name</option>
+
+                    }else {
+                        <option data-image="@country.imageUrl" value="@country.code">@country.name</option>
+
+                    }
+                }else {
+                    <option data-image="@country.imageUrl" value="@country.code">@country.name</option>
+
+                }
+
+            }
+        </select>
+    </div>
+	<div id="no_location">
+        @if(session().get("facebookId") != friend.facebookId){@friend.name is}else{You are} not living in one of available countries.<br />
+		Please change your selection on the left to proceed.
+	</div>
+    <div id="goods">
+        <div class="gift_title"><b>Budget</b> (in <span id="currency">SGD</span>)</div>
+        <div id="slider-budget"></div>
+        <div id="slider-meter">
+            <span>0</span>
+            <span style="left:32px;">50</span>
+            <span style="left:65px;">100</span>
+            <span style="left:100px;">150</span>
+            <span style="left:136px;">200</span>
+            <span style="left:208px;">300</span>
+            <span style="left:280px;">400</span>
+            <span style="left:351px;">500</span>
+            <span style="left:414px;">600</span>
+            <span style="left:494px;">700</span>
+        </div>
+        <div id="available_gift">
+            @*@itemsList(items)*@
+    	</div>
+    </div>
+    <div id="loading">
+        	<img width="30px" src="@routes.Assets.at("images/loading_animation.gif")" />
+    </div>
+	<a id="back_to_top">
+	</a>
+</div>
+}(true)(true)(friend)("gift")

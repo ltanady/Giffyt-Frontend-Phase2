@@ -1,0 +1,10 @@
+@(gift: Gift)
+@main("Giffyt - Receive") {
+	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/receive.css")">
+
+	<div id="content" style="text-align:center">
+	    <div id="gift_box"><img src="@routes.Assets.at("images/giftbox.png")"></div>
+		<div id="message">You've received a gift from @gift.senderName.</div>
+	    <div id="open_btn" onclick="window.location.href='/gifts/@gift.temporaryToken/open'">Open</div>
+	</div>
+}(false)(false)(null)("receive")

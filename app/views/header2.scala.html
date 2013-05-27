@@ -1,0 +1,42 @@
+@(gift_header: Boolean)(friend: User)(page: String)
+@if(gift_header == true) {
+<div id="gift_header">
+	@if(friend != null){
+    <a href="@routes.Friends.eventsFriends()" class="breadcrumb passed">
+    <img class="bread_crumb_icon" src="https://graph.facebook.com/@friend.facebookId/picture?type=square" />
+    <span class="breadcrumb_text">@friend.name</span>
+    <div class="arrow-next sprites sprite-arrow-next"></div>
+    </a>
+    }else {
+    <div class="breadcrumb active">
+    <div class="sprites-icon sprite-icon-people bread_crumb_icon"></div>
+    <span class="breadcrumb_text">select friend</span>
+    <div class="arrow-next sprites sprite-arrow-next"></div>
+    </div>
+    }
+    @if(page=="send"){
+    <a href="@routes.Friends.celebrateFriend(friend.facebookId)" class="breadcrumb passed">
+    <div class="sprites-icon sprite-icon-gift-gray bread_crumb_icon"></div>
+    <span class="breadcrumb_text">select gift</span>
+    <div class="arrow-next sprites sprite-arrow-next"></div>
+    </a>
+    }else {@if(page=="birthday"){
+    <div class="breadcrumb">
+    <div class="sprites-icon sprite-icon-gift bread_crumb_icon"></div>
+    <span class="breadcrumb_text">select gift</span>
+    <div class="arrow-next sprites sprite-arrow-next"></div>
+    </div>
+    }else {
+    <div class="breadcrumb active">
+    <div class="sprites-icon sprite-icon-gift-active bread_crumb_icon"></div>
+    <span class="breadcrumb_text">select gift</span>
+    <div class="arrow-next sprites sprite-arrow-next"></div>
+    </div>
+    }
+    }
+    <div class="breadcrumb @if(page=="send"){active}">
+    <div class='sprites-icon bread_crumb_icon @if(page=="send"){sprite-icon-mail-active} else {sprite-icon-mail}'></div>
+    <span class="breadcrumb_text">send gift</span>
+    </div>
+</div>
+}

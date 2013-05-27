@@ -1,0 +1,33 @@
+@(items: Map[String, List[Product]])
+            @for(((itemCode, variations), i) <- items.toList.zipWithIndex){
+
+                @if(variations != null && variations.size() > 0) {
+	                <div class="gift_item gift_item_unloaded" data-location="@(i+1)" data-price="@variations.get(0).asInstanceOf[StockProduct].price">
+	                    <div class="item_image" onclick="showItem(this)">
+                        @if(variations.get(0).asInstanceOf[StockProduct].productImages != null && variations.get(0).asInstanceOf[StockProduct].productImages.size() > 0) {
+		                    <div class="itemVariationDetail">@itemDetail(variations.get(0),variations,(i+1)%4)</div>
+                            @if(variations.get(0).asInstanceOf[StockProduct] != null && variations.get(0).asInstanceOf[StockProduct].price <= 0) {
+                            <span class="ribbon"></span>
+                            }
+                            <img src="@variations.get(0).asInstanceOf[StockProduct].productImages.get(0).imageUrl" />
+	                    	<div id="item_@(i+1)" data-image="@variations.get(0).asInstanceOf[StockProduct].productImages.get(0).imageUrl"></div>
+	                    
+	                    }else {
+                            <img src="" />
+
+	                    }
+	                    </div>
+
+	                    @if(variations.get(0).isInstanceOf[StockProduct]) {
+		                    <div class="item_desc">@variations.get(0).asInstanceOf[StockProduct].name</div>
+                            @if(variations.get(0).asInstanceOf[StockProduct] != null && variations.get(0).asInstanceOf[StockProduct].price <= 0) {
+                            <div class="item_desc bold">FREE</div>
+                            }else {
+                            <div class="item_desc bold">@variations.get(0).asInstanceOf[StockProduct].country.currency @variations.get(0).asInstanceOf[StockProduct].price</div>
+                            }
+	                    }
+	                </div>
+
+            	}
+            }
+            <div class="dropdown_info"></div>

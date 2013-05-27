@@ -1,0 +1,197 @@
+@(friend: User, item: Product)
+@main("Giffyt - Send") {
+<script type="text/javascript" src="@routes.Assets.at("javascripts/form_validation.js")"></script>
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/send.css")">
+<script src="@routes.Assets.at("javascripts/jquery-1.9.0-minjs.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function(){
+	    $("#optional_box .input_title").click(function(){
+	    if($("#optional_form").is(":hidden"))
+	    {
+	    $("#optional_form").slideDown("fast");
+	    $("#optional_box .input_title span").html("^");
+
+	    }
+	    else{
+	    $("#optional_form").slideUp("fast");
+	    $("#optional_box .input_title span").html("v");
+	    }
+	    });
+	
+	    $("#hint").click(function(){
+	    if($("#hint_box").is(":hidden"))
+	    $("#hint_box").fadeIn(function() {
+	    setTimeout(function(){
+	    $('#hint_box').fadeOut();}, 3000);
+	    });
+	    
+	    });
+	
+	    $(".checkout").click(function(){
+            @if(session.get("facebookId") == friend.facebookId){
+                if(validateForm("wrapForm", false)){
+                    $("#wrapForm").submit();
+                }
+            } else {
+                if(validateForm("wrapForm", true)){
+                    $("#wrapForm").submit();
+                }
+            }
+	        $(".checkout").attr("disabled", "disabled");
+	    });
+	
+	    $("textarea").keypress(function(e){
+		    var text = $(this).val();
+		    temp = $(this).val().split("\n");
+		
+		
+			if ((e.keyCode != 46 && e.keyCode != 8) && (text.length >= 255 || temp.length > 8))
+			{
+				return false;
+			}
+		});
+    });
+</script>
+
+<div id="dvLoading"></div>
+<div id="dvLoadingGif"></div>
+<div id="content">
+    <div id="left_content">
+        <div id="gift_box">
+            <img src="@{item.asInstanceOf[StockProduct].productImages.get(0).imageUrl}"/>
+        </div>
+        <div id="payment_detail">
+            <div id="left_title">Payment Details</div>
+            <div id="gift">
+                <div id="gift_desc">
+                    <div id="gift_name">@{item.asInstanceOf[StockProduct].name}</div>
+                    <div id="gift_detail">@{item.asInstanceOf[StockProduct].productAttributes.get(0).name}: @{item.asInstanceOf[StockProduct].productAttributes.get(0).value}</div>
+                    <div class="other">by @{item.asInstanceOf[StockProduct].brand}</div>
+                </div>
+                @if(item.asInstanceOf[StockProduct].campaign != null && item.asInstanceOf[StockProduct].price <= 0) {
+                <div id="gift_price" class="other">FREE</div>
+                }else {
+                <div id="gift_price" class="other">@item.asInstanceOf[StockProduct].country.currency @item.price</div>
+                }
+            </div>
+            @*<div class="payment">
+                <div class="other" style="display:inline-block;">Shipping fee</div>
+                @if(item.asInstanceOf[StockProduct].campaign != null && item.asInstanceOf[StockProduct].additionalShippingCost <= 0) {
+                <div class="other" style="float:right; display:inline-block;">FREE</div>
+                }else {
+                <div class="other" style="float:right; display:inline-block;">@item.asInstanceOf[StockProduct].country.currency @item.asInstanceOf[StockProduct].additionalShippingCost</div>
+                }
+            </div>*@
+            <div class="payment">
+                <div class="other" style="display:inline-block;">Delivery Area</div>
+                <div class="other" style="float:right; display:inline-block;">
+                <select class="select_delivery_option" style="max-width:340px; width:auto; min-width:150px;">
+                    @for(deliveryAreaOption <- item.merchant.deliveryAreaOptions) {
+                    <option value="@deliveryAreaOption.id">
+                        @deliveryAreaOption.area
+                        @if(deliveryAreaOption.amount > 0.0) {
+                            +@item.merchant.country.currency @deliveryAreaOption.amount
+                        }else {
+                            FREE
+                        }
+                    </option>
+                    }
+                </select>
+                </div>
+            </div>
+            <div class="payment">
+                <div class="other" style="display:inline-block;">Delivery Time</div>
+                <div class="other" style="float:right; display:inline-block;">
+                <select class="select_delivery_option" style="max-width:340px; width:auto; min-width:150px;">
+                    @for(deliveryTimeOption <- item.merchant.deliveryTimeOptions) {
+                    <option value="@deliveryTimeOption.id">
+                        @deliveryTimeOption.description
+                        @if(deliveryTimeOption.amount > 0.0) {
+                            +@item.merchant.country.currency @deliveryTimeOption.amount
+                        }else {
+                            FREE
+                        }
+                    </option>
+                    }
+                </select>
+                </div>
+            </div>
+        </div>
+        @if(item.asInstanceOf[StockProduct].campaign != null && ((item.asInstanceOf[StockProduct].price + item.asInstanceOf[StockProduct].additionalShippingCost) <= 0)) {
+        <div id="total_payment">Total<div style="display:inline-block; float:right;">FREE</div></div>
+        }else {
+        <div id="total_payment">Total<div style="display:inline-block; float:right;">@{item.asInstanceOf[StockProduct].country.currency} @{(item.asInstanceOf[StockProduct].price + item.asInstanceOf[StockProduct].additionalShippingCost)}</div></div>
+        }
+    </div>
+
+
+    <!--for yourself-->
+    <div id="right_content">
+        @*<form id="wrapForm" action="@routes.Orders.saveOrder(friend.id, item.id)" method="post">*@
+            @if(session.get("facebookId") == friend.facebookId){
+            <div id="for_yourself">
+                <div class="input_title">Recipient's name</div>
+                <input class="info" id="recipientName" name="recipientName" value="@friend.name" type="text" style="margin-bottom:20px;" placeholder="Recipient's name"/>
+
+                <div class="input_title">Confirmation email</div>
+                <input class="info" id="recipientEmail" name="recipientEmail" value="@friend.email" type="text" style="margin-bottom:20px;" placeholder="Your email"/>
+
+                <div class="input_title">Contact Number</div>
+                <input class="info" id="contactNumber" name="contactNumber" type="text" style="margin-bottom:20px;" placeholder="Your Phone number"/>
+
+                <div class="input_title">Delivery Address</div>
+                <textarea class="infoAddress" id="address" name="address" style="width:355px; height:100px;" placeholder="Address"></textarea>
+                <input class="infoAddress" id="city" name="city" type="text" placeholder="City" />
+                <input class="infoAddress" id="state" name="state" type="text" placeholder="State" />
+                <input readonly class="infoAddress" id="country" name="country" type="text" placeholder="Country" value="@item.country.name"/>
+                <input type="hidden" id="countryId" name="countryId" value="@item.country.id" />
+                <input class="infoAddress" id="postalCode" name="postalCode" type="text" placeholder="Postal code" />
+                <div id="paypal" class="checkout">Checkout with <img src="@routes.Assets.at("images/paypal.png")"/></div>
+            </div>
+            }else {
+            <!--for friend-->
+            <div id="for_friend">
+                <div class="input_title">Recipient's name</div>
+                <input class="info" id="recipientName" name="recipientName" value="@friend.name" type="text" placeholder="Recipient's name"/>
+                <textarea class="info" id="message" name="message" maxlength="255" placeholder="Your message"></textarea>
+
+                <div class="input_title">Notify via email</div>
+                <input class="info" id="recipientEmail" name="recipientEmail" value="@friend.email" type="text" placeholder="Recipient's email"/>
+
+                <div id="optional_box">
+                    <div class="input_title">Know the delivery address? (Optional)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
+                    <div id="optional_form">
+                        <input class="infoAddress" id="contactNumber" name="contactNumber" type="text" style="margin-bottom:20px;" placeholder="Phone number"/>
+                        <textarea class="infoAddress" id="address" name="address" maxlength="255" onpaste="return false;" style="width:315px; height:100px;" placeholder="Address"></textarea>
+                        <input class="infoAddress" id="city" name="city" type="text" placeholder="City" />
+                        <input class="infoAddress" id="state" name="state" type="text" placeholder="State" />
+                        <input readonly id="country" name="country" type="text" placeholder="Country" value="@item.country.name" />
+                        <input type="hidden" id="countryId" name="countryId" value="@item.country.id" />
+                        <input class="infoAddress" id="postalCode" name="postalCode" type="text" placeholder="Postal code" />
+                    </div>
+                </div>
+                <div style="position:relative">
+                    <input type="checkbox" id="c1" name="isSurprise" />
+                    <label for="c1" class="input_title"><span></span>Make this gift a surprise</label><div id="hint">?</div>
+                    <div id="hint_box">If the gift is made a surprise,the recipient will not be able to see and choose the gift.</div>
+                </div>
+                @if((item.price+item.asInstanceOf[StockProduct].additionalShippingCost) > 0) {
+                <div id="paypal" class="checkout">
+                    Checkout with <img src="@routes.Assets.at("images/paypal.png")"/>
+                </div>
+                }else {
+                <div id="nonpaypal" class="checkout">
+                    Give it
+                </div>
+                }
+                <div class="input_title" style="font-weight:normal">
+                    Your friend has 28 days to pick up this gift. After that the money will be returned to your account.</div>
+            </div>
+            }
+        @*</form>*@
+    </div>
+
+</div>
+}(true)(true)(friend)("send")

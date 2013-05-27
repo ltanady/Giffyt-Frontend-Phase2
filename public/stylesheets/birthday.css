@@ -1,0 +1,224 @@
+/* CSS Document */
+#content
+{
+	margin:auto;
+	width:965px;
+	font-family:"Lucida Grande", sans-serif;
+}
+
+#content_header
+{
+	margin:auto;
+	width:600px;
+}
+
+#friend_name
+{
+	font-size:24;
+	color:#8b8b8b;
+	font-weight:bold;
+}
+
+#friend_name input[type=text]
+{
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	padding:8px;
+	color:#3ebbdb;
+	border:1px solid #aaaaaa;
+	font-size:13px;
+	width:385px;
+	margin-bottom:30px;
+}
+
+#or
+{
+	font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-weight:bold;
+	color:#3ebbdb;
+	font-size:18px;
+	margin-bottom:30px;
+}
+
+#or hr
+{
+	vertical-align:middle;
+	width:230px;
+	border-top:none;
+	border-color:#aaaaaa;
+	display:inline-block;
+}
+
+#celebrate
+{
+	font-size:24;
+	color:#8b8b8b;
+	font-weight:bold;
+	margin-bottom:30px;
+	text-align:left;
+}
+
+.photo_box{
+	width:164px;
+	vertical-align:top;
+	display:inline-block;
+	text-align:center;
+	color:#8c8c8c;
+	font-size:12px;
+	margin-left:60px;
+	margin-bottom:40px;
+}
+
+.photo_name{
+	font-weight:bold;
+}
+
+.photo{
+	display:inline-block;
+	position:relative;
+	margin-bottom:10px;
+	text-align:left;
+	max-width:100%;
+	background:url(../images/box_shadow.png) no-repeat;
+	background-position:bottom;
+}
+
+.photo img.user_photo{
+	padding:3px;
+	background-color:#FFF;
+	border:1px solid #eaeaea;
+	max-width:156px;
+	max-height:156px;
+	width:auto;
+	height:auto;
+}
+
+.photo_icon
+{
+	position:absolute; left:0px; top:0px;
+}
+
+.shadow_box
+{
+	position:absolute;
+	bottom:-1px;
+	height:14px;
+	width:100%;
+	z-index:-1;
+	left:0px;
+	background:url(../images/box_shadow.png);
+}
+
+.birthday
+{
+	position:relative;
+}
+
+.birthday:after
+{
+	content:"";
+	width:45px;
+	height:45px;
+	background:url(../images/birthday.png) no-repeat;
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+.love
+{
+	position:relative;
+}
+
+.love:after
+{
+	content:"";
+	width:45px;
+	height:45px;
+	background:url(../images/love.png) no-repeat;
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+.event_date
+{
+	color:#00addb;
+	position:relative;
+	display:inline-block;
+	min-width:140px;	
+	text-align:right;
+}
+
+.calendar
+{
+	margin-top:8px;
+	float:right;
+	border:1px solid;
+	border-top:10px solid;
+	border-color:#00addb;
+	width:44px;
+	height:35px;
+	text-align:center;
+	box-shadow:0px 1px 5px -3px #000;
+}
+
+.calendar_date
+{
+	font-size:14.4px;
+}
+
+.calendar_month
+{
+	font-weight:bold;
+	font-size:8px;
+	padding-bottom:2.5px;
+	border-bottom:1px solid #00addb;
+}
+
+.calendar_month2
+{
+	font-weight:bold;
+	font-size:12px;
+	padding:8px 0px;
+	border-bottom:1px solid #00addb;
+}
+
+.event_date:after
+{
+	content:"";
+	position:absolute;
+	top:20px;
+	right:-25px;
+	width:6px;
+	height:6px;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	background-color:#fff;
+	border:1px solid #bbbbbb;
+}
+
+.photos
+{
+	vertical-align:top;
+	display:inline-block;
+	margin-left:14px;
+	border-left:4px solid #d8d8d8;	
+	padding-bottom:50px;
+	max-width:80%;
+}
+
+#autocomplete::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #d8d8d8 !important;
+}
+#autocomplete:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #d8d8d8 !important;
+}
+#autocomplete::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #d8d8d8 !important;
+}
+#autocomplete:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #d8d8d8 !important;
+}
