@@ -167,6 +167,7 @@
 
     <!--for yourself-->
     <div id="right_content">
+<<<<<<< HEAD
         <div class="input_title">
             This is a gift for:
         </div>
@@ -176,6 +177,14 @@
             <input type="radio" name="type" id="option_gift" value="gift">
             <label for="option_gift" class="input_title">A friend</label>
         </div><br>
+=======
+        <div class="input_title" style="position:relative">
+            <input type="radio" name="type" id="option_self" value="self" checked>
+            <label for="option_self" class="input_title"><span></span>A gift for yourself</label>
+            <input type="radio" name="type" id="option_gift" value="gift">
+            <label for="option_gift" class="input_title"><span></span>A gift for friend</label>
+        </div>
+>>>>>>> 0dbd8959bd82a2ce9cd6af3a1a45fbd397348055
         @*<form id="wrapForm" action="@routes.Orders.saveOrder(friend.id, item.id)" method="post">*@
             @*if(session.get("facebookId") == friend.facebookId){
             <div id="for_yourself">
@@ -214,14 +223,14 @@
                 <input class="info" id="recipientEmail" name="recipientEmail" value="@friend.email" type="text" placeholder="Recipient's email"/>
 
                 <div id="message_box" class="optional_box">
-                    <div class="input_title">Want to add message? (Optional)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
+                    <div class="input_title">Message (Optional)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
                     <div id="message_form" class="optional_form">
                         <textarea class="info" id="message" name="message" maxlength="255" style="width:315px; height:100px;" placeholder="Your message"></textarea>
                     </div>
                 </div>
 
                 <div id="address_box" class="optional_box">
-                    <div class="input_title">Know the delivery address? (Optional)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
+                    <div class="input_title">Delivery address (Optional for non-surprise gift)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
                     <div id="address_form" class="optional_form">
                         <input class="infoAddress" id="contactNumber" name="contactNumber" type="text" style="margin-bottom:20px;" placeholder="Phone number"/>
                         <textarea class="infoAddress" id="address" name="address" maxlength="255" onpaste="return false;" style="width:315px; height:100px;" placeholder="Address"></textarea>
