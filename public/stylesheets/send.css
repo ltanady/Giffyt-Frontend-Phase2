@@ -275,3 +275,21 @@ input[type="checkbox"]:checked + label span {
 	width:178px;
 	font-size:12px;
 }
+
+input[type="radio"] {
+    display:none;
+}
+
+input[type="radio"] + label span{
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 10px 0 0;
+    vertical-align:middle;
+    background:url(../images/radiobutton.png) no-repeat;
+    cursor:pointer;
+}
+
+input[type="radio"]:checked + label span{
+    background:url(../images/radiobutton_checked.png) no-repeat;
+}
