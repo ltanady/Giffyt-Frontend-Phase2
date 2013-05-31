@@ -9,11 +9,13 @@
     $(document).ready(function(){
         $("input[name='type']").change(function(){
             if ($("input[name='type']:checked").val() == 'self'){
+                $("#sender_details").hide();
                 $("#surprise").hide();
                 $("#gift_reminder").hide();
                 if($("#address_form").is(":hidden"))
                     $("#address_box .input_title").click();
             } else if ($("input[name='type']:checked").val() == 'gift'){
+                $("#sender_details").show();
                 $("#surprise").show();
                 $("#gift_reminder").show();
                 if(!$("#address_form").is(":hidden"))
@@ -60,12 +62,23 @@
 	    });
 	
 	    $(".checkout").click(function(){
-            @if(session.get("facebookId") == friend.facebookId){
+            @*@if(session.get("facebookId") == friend.facebookId){
                 if(validateForm("wrapForm", false)){
                     $("#wrapForm").submit();
                 }
             } else {
                 if(validateForm("wrapForm", true)){
+                    $("#wrapForm").submit();
+                }
+            }*@
+            if($("input[name='type']:checked").val() == 'self'){
+                if(validateForm("wrapForm", false)){
+                    $("#wrapForm").submit();
+                }
+            } else if ($("input[name='type']:checked").val() == 'gift'){
+                if($('#c1').is(':checked') && validateForm("wrapForm", false)){
+                    $("#wrapForm").submit();
+                } else if(!$('#c1').is(':checked') && validateForm("wrapForm", true)){
                     $("#wrapForm").submit();
                 }
             }
@@ -87,6 +100,7 @@
         $('input:radio[name=type]')[0].checked = true;
         $("input[name='type']").change();
         $('#c1').change(function () {
+            alert($('#c1').is(':checked'));
             if($('input:radio[name=type]')[1].checked && $("#address_form").is(":hidden"))
                 $("#address_box .input_title").click()  ;
         });
@@ -200,12 +214,12 @@
             }else {    *@
             <!--for friend-->
             <div id="for_friend">
-                <div class="input_title">Sender's name</div>
+                <span id="sender_details"><div class="input_title">Sender's name</div>
                 <input class="info" id="senderName" name="senderName" value="" type="text" placeholder="Sender's name"/>
 
                 <div class="input_title">Sender's email</div>
                 <input class="info" id="senderEmail" name="senderEmail" value="" type="text" placeholder="Sender's email"/>
-
+                </span>
 
                 <div class="input_title">Recipient's name</div>
                 <input class="info" id="recipientName" name="recipientName" value="@friend.name" type="text" placeholder="Recipient's name"/>
@@ -216,7 +230,7 @@
                 <div id="message_box" class="optional_box">
                     <div class="input_title">Message (Optional)<span style="float:right; font-weight:bold; font-size:14px;">v</span></div>
                     <div id="message_form" class="optional_form">
-                        <textarea class="info" id="message" name="message" maxlength="255" style="width:315px; height:100px;" placeholder="Your message"></textarea>
+                        <textarea id="message" name="message" maxlength="255" style="width:315px; height:100px;" placeholder="Your message"></textarea>
                     </div>
                 </div>
 
@@ -254,4 +268,4 @@
     </div>
 
 </div>
-}(true)(true)(friend)("send")
+}(true)(true)(friend)(null)("send")

@@ -1,6 +1,6 @@
 function validateForm(formName, optional){
     var $form = $("#"+formName);
-    $inputs = $form.find("input, select, button, textarea, checkbox");
+    $inputs = $form.find("input, select, button, textarea, checkbox, radio");
     serializedData = $form.serialize();
     // Disable the submitNotify button + field while sending
     $inputs.attr("disabled", "disabled");

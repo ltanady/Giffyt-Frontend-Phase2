@@ -313,7 +313,7 @@ public class Friends extends Controller {
                         }
 
                     }*/
-                    return ok(views.html.gift.render(friend, countries, products));
+                    return ok(views.html.gift.render(friend, null, countries, products));
 
                 }
             });

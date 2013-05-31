@@ -17,6 +17,8 @@ GET     /friends/:friendId/give/:itemId             controllers.Friends.wrapGift
 
 POST    /products/list                              controllers.Products.list(countryCode: String, budget: Double ?= -1.0)
 
+GET     /products/listAll                           controllers.Products.celebrateFriend(friendId: String?= null)
+
 POST    /gifts/count                                controllers.Gifts.count()
 
 GET     /gifts/list                                 controllers.Gifts.list()

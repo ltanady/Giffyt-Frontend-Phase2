@@ -21,15 +21,15 @@
 
 #friend_name input[type=text]
 {
-	border-radius:5px;
+	/*border-radius:5px;
 	-webkit-border-radius:5px;
 	-moz-border-radius:5px;
-	padding:8px;
+	padding:8px;*/
 	color:#3ebbdb;
-	border:1px solid #aaaaaa;
+	/*border:1px solid #aaaaaa;*/
 	font-size:13px;
-	width:385px;
-	margin-bottom:30px;
+	/*width:385px;
+	margin-bottom:30px;*/
 }
 
 #or
@@ -222,3 +222,15 @@
 #autocomplete:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #d8d8d8 !important;
 }
+
+#autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+* html #autocomplete {
+    height: 100px;

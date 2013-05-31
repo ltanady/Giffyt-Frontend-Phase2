@@ -27,7 +27,9 @@ public class Application extends Controller {
   
     public static Result index() {
         play.Logger.info("Application.index(): start");
-        return ok(views.html.index.render());
+        //return ok(views.html.index.render());
+
+        return Products.celebrateFriend(null); //ok(views.html.itemList.render());
 
     }
 

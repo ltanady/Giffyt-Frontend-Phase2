@@ -1,6 +1,6 @@
 @(login: Boolean)
 <link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/header.css")"/>
-<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
+@*<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>     *@
 <script type="text/javascript">
 $(document).ready(function(){
 	$(".notif").hide();
@@ -62,6 +62,11 @@ $(document).ready(function(){
                 <a class="header_dropdown_item" href="@routes.Application.logout()">Logout</a>
             </div>            
         </div>
+        } else {
+        <div id="header_right">
+            <div id="login" class="sprites sprite-fb-button1"></div>
+        </div>
         }
+
     </div>
 </div>

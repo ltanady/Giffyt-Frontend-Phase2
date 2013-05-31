@@ -87,12 +87,17 @@ body{
 	margin-left:0;
 }
 
-.breadcrumb_text{
+.breadcrumb_text, .breadcrumb_text input{
 	line-height:70px;
 	vertical-align:top;
 	height:40px;
 	color:#d8d8d8;
 	margin-left:8px;
+}
+
+.breadcrumb_text input{
+width: 150px;
+height:60px;
 }
 
 .breadcrumb.active .breadcrumb_text{

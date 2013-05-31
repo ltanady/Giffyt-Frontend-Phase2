@@ -10,7 +10,7 @@ hasNoEvents: Boolean = false)
 	<div id="content">
 	    <div id="content_header">
 	        <div id="friend_name">
-	        	Send a gift to <input id="autocomplete" type="text" placeholder="Enter friend's name">
+                Send a gift to <input id="autocomplete" type="text" placeholder="Enter friend's name">
                 <script>
 					$( "#autocomplete" ).autocomplete({
 						source: [
@@ -36,7 +36,7 @@ hasNoEvents: Boolean = false)
 							.data("item.autocomplete", item)
 							.append( $( "<a>" ).html( '<img src="'+item.img+'" /> '+ item.label ) )
 							.appendTo(ul);
-					};   
+					};
 				</script>
 	        </div>
 	        <div id="or"><hr/>&nbsp;&nbsp; OR &nbsp;&nbsp;<hr/></div>
@@ -185,4 +185,4 @@ hasNoEvents: Boolean = false)
 	    </div>
 	</div>
 
-}(true)(true)(null)("birthday")
+}(true)(true)(null)(null)("birthday")

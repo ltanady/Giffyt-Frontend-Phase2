@@ -1,19 +1,60 @@
-@(gift_header: Boolean)(friend: User)(page: String)
+@(gift_header: Boolean)(friend: User)(friends: List[User])(page: String)
 @if(gift_header == true) {
+<script src="@routes.Assets.at("javascripts/jquery-ui.js")" type="text/javascript"></script>
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/birthday.css")">
 <div id="gift_header">
-	@if(friend != null){
-    <a href="@routes.Friends.eventsFriends()" class="breadcrumb passed">
-    <img class="bread_crumb_icon" src="https://graph.facebook.com/@friend.facebookId/picture?type=square" />
-    <span class="breadcrumb_text">@friend.name</span>
+	<div class="sprites-icon sprite-icon-people bread_crumb_icon"><img id="friend_pic" src="" /></div>
+    <span id="friend_name" class="breadcrumb_text active">
+        <input id="autocomplete" type="text" placeholder="Enter friend's name" style="border: 0;
+    background: transparent">
+        <style>
+            .ui-widget-content a{
+            color: #8B8B8B/*{fcContent}*/;
+            }
+        </style>
+        @if(friends != null){
+        <script>
+            $( "#autocomplete" ).autocomplete({
+                source: [
+                    @if(friends != null && friends.size() > 0) {
+                        @for((friend, i) <- friends.zipWithIndex) {
+                            @if(i+1 < friends.size() ) {
+                                { "label": "@friend.name", "id": "@friend.facebookId", "img": "http://graph.facebook.com/@friend.facebookId/picture" },
+                            } else {
+                                { "label": "@friend.name", "id": "@friend.facebookId", "img": "http://graph.facebook.com/@friend.facebookId/picture" }
+                            }
+                        }
+                    }
+                ]
+            });
+
+            $( "#autocomplete" ).autocomplete({
+                select: function( event, ui ) {
+                    console.log(ui.item);
+                    $("#friend_pic").attr('src', "");
+                    //document.location.href = "@routes.Friends.eventsFriends()/"+ui.item.label;
+                }
+            });
+
+            $( "#autocomplete" ).autocomplete({}).data("uiAutocomplete")._renderItem = function (ul, item) {
+                return $("<li />")
+                    .data("item.autocomplete", item)
+                    .append( $( "<a>" ).html( '<img src="'+item.img+'" /> '+ item.label ) )
+                    .appendTo(ul);
+            };
+        </script>
+        }
+    </span>
     <div class="arrow-next sprites sprite-arrow-next"></div>
-    </a>
+    @*
     }else {
     <div class="breadcrumb active">
     <div class="sprites-icon sprite-icon-people bread_crumb_icon"></div>
     <span class="breadcrumb_text">select friend</span>
     <div class="arrow-next sprites sprite-arrow-next"></div>
     </div>
-    }
+    } *@
     @if(page=="send"){
     <a href="@routes.Friends.celebrateFriend(friend.facebookId)" class="breadcrumb passed">
     <div class="sprites-icon sprite-icon-gift-gray bread_crumb_icon"></div>
